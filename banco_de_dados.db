@@ -1,0 +1,40 @@
+CREATE TABLE Cliente (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT UNIQUE NOT NULL,
+    telefone TEXT,
+    endereco TEXT,
+);
+
+CREATE TABLE Livro (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    titulo TEXT NOT NULL,
+    autor TEXT NOT NULL,
+    editora TEXT,
+    ano_publicacao INTEGER
+    preco DECIMAL(10,2)
+);
+
+CREATE TABLE Pedido (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cliente_id INTEGER,
+    data DATE NOT NULL,
+    status TEXT CHECK(status IN ('pendente', 'enviado', 'entregue')),
+    FOREIGN KEY (cliente_id) REFERENCES Cliente(id)
+);
+
+CREATE TABLE Pedido_Livro (
+    pedido_id INTEGER,
+    livro_id INTEGER,
+    quantidade INTEGER,
+    PRIMARY KEY (pedido_id, livro_id),
+    FOREIGN KEY (pedido_id) REFERENCES Pedido(id),
+    FOREIGN KEY (livro_id) REFERENCES Livro(id)
+);
+
+CREATE TABLE Pagamento (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    pedido_id INTEGER,
+    valor DECIMAL(10,2) NOT NULL,
+    metodo_pagamento TEXT CHECK(metodo_pagamento IN ('cartão', 'boleto', 'pix')),
+    FOREIGN KEY (pedido_id) REFERENCES Pedido(id)
+);
